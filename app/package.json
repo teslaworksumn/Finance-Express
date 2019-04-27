@@ -1,0 +1,14 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "This is the back end service for the Tesla Works Finance website",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tesla Works",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
