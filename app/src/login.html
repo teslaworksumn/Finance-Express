@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Tesla Works Finance - Login</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->	
+	<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="css/util.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+<!--===============================================================================================-->
+	<script src="https://apis.google.com/js/platform.js" async defer></script>
+	<meta name="google-signin-scope" content="profile email">
+	<meta name="google-signin-client_id" content="964204608261-el0prl1gvfvkh2u7pios7qb14luuq595.apps.googleusercontent.com">
+</head>
+<body>
+	<!--<div id="banner">
+		<div id="banner-content">
+			** SITE CURRENTLY IN DEVELOPMENT **<br />** PRODUCTION RELEASE: JULY 1st, 2018 **
+		</div>
+	</div> -->
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100">
+				<div class="login100-pic js-tilt" data-tilt>
+					<img src="images/twlogo.png" alt="Tesla Works Logo">
+				</div>
+
+				<form class="login100-form validate-form" method="post" action="">
+					<span class="login100-form-title">
+						Tesla Works Finance
+					</span>
+
+					<div class="g-signin2" data-onsuccess="onSignIn"></div>
+					<script>
+						var xhttp = new XMLHttpRequest();
+
+						function onSignIn(googleUser) {
+							var profile = googleUser.getBasicProfile();
+							console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+							console.log('Name: ' + profile.getName());
+							console.log('Image URL: ' + profile.getImageUrl());
+							console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+
+							var id_token = googleUser.getAuthResponse().id_token;
+							console.log("ID Token: " + id_token);
+							xhttp.open("POST", "oauthconfirm.php", true);
+							xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+							xhttp.send("googleID=" + profile.getEmail());
+							document.location.href = "http://localhost/";
+							}
+					</script>
+
+
+					<div class="text-center p-t-12">
+						<span class="txt1">
+							Forgot
+						</span>
+						<a class="txt2" href="#">
+							Username / Password?
+						</a>
+					</div>
+				</form>
+			</div>
+			<div class="footer">
+				<p style="color:white;">&copy; 2018 Tesla Works</p>
+			</div>
+		</div>
+	</div>
+
+
+	
+	
+
+	
+<!--===============================================================================================-->	
+	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/bootstrap/js/popper.js"></script>
+	<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/select2/select2.min.js"></script>
+<!--===============================================================================================-->
+	
+<!--===============================================================================================-->
+	<script src="js/main.js"></script>
+
+</body>
+</html>
