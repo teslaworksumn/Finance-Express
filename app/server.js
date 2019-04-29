@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 let jwt = require('jsonwebtoken');
 let config = require('./config');
 let middleware = require('./middleware');
-var expressSession = require('express-session');
+var session = require('express-session');
 
 var mainpage = require('./mainpage.js');
 var ledger = require('./ledger.js');
@@ -21,7 +21,7 @@ function main () {
   app.use(bodyParser.json());
   // Routes & Handlers
   app.use(express.static(__dirname + '/src'))
-  app.use(expressSession({secret: "tesla_works_is_amazing", saveUninitialized: false, resave: false}));
+  app.use(session({secret: "tesla_works_is_amazing", saveUninitialized: false, resave: false}));
   app.use('/', mainpage);
   app.use('/auth', auth);
   app.use('/ledger', ledger);

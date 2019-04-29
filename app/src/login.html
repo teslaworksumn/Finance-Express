@@ -55,9 +55,12 @@
 
 							var id_token = googleUser.getAuthResponse().id_token;
 							console.log("ID Token: " + id_token);
-							xhttp.open("POST", "oauthconfirm.php", true);
+							//xhttp.open("POST", "oauthconfirm.php", true);
+							//xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+							//xhttp.send("googleID=" + profile.getEmail());
+							xhttp.open("POST", "auth", true);
 							xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-							xhttp.send("googleID=" + profile.getEmail());
+							xhttp.send("user=" + profile.getEmail());
 							document.location.href = "http://localhost:8000/";
 							}
 					</script>

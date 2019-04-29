@@ -7,6 +7,17 @@ router.get('/', function(req, res) {
   res.sendFile(__dirname + '/src/login.html');
 });
 
+router.post('/', function(req, res) {
+  let userName = req.body.user;
+  req.session.user = userName;
+  res.send(req.session.user);
+  console.log(req.session.user);
+});
+
+router.post('/checkMe', function(req, res) {
+  res.send(req.session.user);
+})
+
 router.post('/login', function(req, res) {
   let username = req.body.username;
   let password = req.body.password;
