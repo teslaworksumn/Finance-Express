@@ -1,6 +1,16 @@
 let jwt = require('jsonwebtoken');
 const config = require('./config.js');
 
+//var db = require('./database.js');
+
+let checkAuth = (req, res, next) => {
+  if (req.expressSession && res.expressSession.user) {
+    next();
+  } else {
+    res.redirect('/auth');
+  }
+};
+
 let checkToken = (req, res, next) => {
   let token = req.headers['x-access-token'] || req.headers['authorization'] || '';
   if (token.startsWith('Bearer ')) {
@@ -23,5 +33,6 @@ let checkToken = (req, res, next) => {
 };
 
 module.exports = {
-  checkToken: checkToken
+  checkToken: checkToken,
+  checkAuth: checkAuth
 }
