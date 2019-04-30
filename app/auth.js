@@ -8,10 +8,15 @@ router.get('/', function(req, res) {
 });
 
 router.post('/', function(req, res) {
-  let userName = req.body.user;
+  var userName = req.body.user;
+  //req.session.regenerate(function() {
+  //  req.session.user = userName;
+  //  res.send(req.session.user);
+  //});
   req.session.user = userName;
   res.send(req.session.user);
-  console.log(req.session.user);
+  //session.save();
+  //console.log(req.session.user);
 });
 
 router.post('/checkMe', function(req, res) {
