@@ -59,3 +59,8 @@ typings/
 
 # next.js build output
 .next
+
+# key and cert files for HTTPS
+*.key
+*.cert
+

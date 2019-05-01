@@ -1,0 +1,28 @@
+<!doctype HTML>
+<html>
+<head>
+	<title>
+		Tesla Works Finance
+	</title>
+</head>
+<body>
+	<h1>
+		Hello. This is the Tesla Works finance website!
+	</h1>
+	<p>
+		You are logged in as: 
+	</p>
+	<p id="username"></p>
+
+	<script type="text/javascript">
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				document.getElementById("username").innerHTML = xhttp.responseText;
+			}
+		};
+		xhttp.open("POST", "auth/checkMe", true);
+		xhttp.send();
+	</script>
+</body>
+</html>
