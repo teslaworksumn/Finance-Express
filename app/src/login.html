@@ -61,7 +61,7 @@
 							xhttp.open("POST", "auth", true);
 							xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 							xhttp.send("user=" + profile.getEmail());
-							document.location.href = "https://localhost:8000/";
+							setTimeout(() => document.location.href = "https://localhost:8000/", 1000);
 							}
 					</script>
 
