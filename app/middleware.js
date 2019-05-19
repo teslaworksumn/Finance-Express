@@ -1,8 +1,6 @@
 let jwt = require('jsonwebtoken');
 const config = require('./config.js');
 
-//var db = require('./database.js');
-
 let checkAuth = (req, res, next) => {
   if (req.session && req.session.user) {
     next();
