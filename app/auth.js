@@ -7,6 +7,11 @@ router.get('/', function(req, res) {
   res.sendFile(__dirname + '/src/login.html');
 });
 
+router.get('/logout', function(req, res) {
+  req.session.destroy();
+  window.location = '/';
+});
+
 router.post('/', function(req, res) {
   var userName = req.body.user;
   //req.session.regenerate(function() {
