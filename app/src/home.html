@@ -1,28 +1,78 @@
-<!doctype HTML>
+<!DOCTYPE html>
 <html>
+<title>Home</title>
 <head>
-	<title>
-		Tesla Works Finance
-	</title>
-</head>
-<body>
-	<h1>
-		Hello. This is the Tesla Works finance website!
-	</h1>
-	<p>
-		You are logged in as: 
-	</p>
-	<p id="username"></p>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" type="text/css">
+  <link type="text/css" rel="stylesheet" href="css/bootstrap.css"/>
+  <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css"/>
+  <link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
+  <link rel="stylesheet" href="css/munchi.css" type="text/css"> </head>
 
-	<script type="text/javascript">
-		var xhttp = new XMLHttpRequest();
-		xhttp.onreadystatechange = function() {
-			if (this.readyState == 4 && this.status == 200) {
-				document.getElementById("username").innerHTML = xhttp.responseText;
-			}
-		};
-		xhttp.open("POST", "auth/checkMe", true);
-		xhttp.send();
-	</script>
+<body class="geometry">
+<!--<div id="banner">
+		<div id="banner-content">
+    Bug, comment, suggestion? <a href="mailto:knuds208@umn.edu" style="color: #FFFF00">Click here!</a>
+		</div>
+	</div>-->
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #333333;">
+        <a class="navbar-brand" href="javascript:;"><img src="images/cogbluewhite.png" height="26"> Tesla Works Finance</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="active"><a class="nav-link animate-underline" href="javascript:;"><i class="fa fa-home"></i> Home</a></li>
+                <li><a class="nav-link animate-underline" href="ledger"><i class="fa fa-table"></i> Ledger</a></li>
+                <li><a class="nav-link animate-underline" href="graphs"><i class="fa fa-chart-pie"></i> Graphs</a></li>
+                <li><a class="nav-link animate-underline" href="receiptupload"><i class="fa fa-receipt"></i> Receipts</a></li>
+                <li><a class="nav-link animate-underline" href="prmanage"><i class="fa fa-tags"></i> Purchase Requests</a></li>
+                <li class="dropdown"><a class="nav-link animate-underline" data-toggle="dropdown" href="#"><i class="fa fa-tshirt"></i> Swag ▽</a>
+                    <ul class="dropdown-menu">
+                            <li><a style="color: black;" href="swagpurchase" class="nav-link"><i class="fa fa-shopping-cart fa-shopping-cart"></i> Purchase</a></li>
+                            <li><a style="color: black;" href="swagmanage" class="nav-link"><i class="fa fa-box-open fa-box-open"></i> Manage Swag</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown"><a class="nav-link animate-underline" data-toggle="dropdown" href="#"><i class="fa fa-cogs"></i> Manage ▽</a>
+                    <ul class="dropdown-menu">
+                            <li><a style="color: black;" href="funding" class="nav-link"><i class="fa fa-dollar-sign"></i> Funding</a></li>
+                            <li><a style="color: black;" href="projects" class="nav-link"><i class="fa fa-project-diagram"></i> Projects</a></li>
+                            <li><a style="color: black;" href="users" class="nav-link"><i class="fa fa-users-cog"></i> Users</a></li>
+                    </ul>
+                </li>
+                <li><a class="nav-link animate-underline" href="profile"><i class="fa fa-user"></i> Profile</a></li>
+                <li><a class="nav-link animate-underline" href="logout"><i class="fa fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+</nav>
+  <div class="py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 class="">Tesla Works Finance</h1>
+          <p>This is the Tesla Works Finance portal. Use this site to view/edit the ledger, upload receipts, and view current spending statistics.</p>
+          <h2>Quick Links</h2>
+          <p><a href="purchaserequest.php" target="_blank">Purchase Request Form (Public)</a><br><a href="internalpr.php">Internal Purchase Request Form</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="py-5">
+    <div class="container">
+     
+
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+	  <p style="color:black;">&copy; 2018 Tesla Works</p>
+  </div>
+ 
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
 </body>
+
 </html>

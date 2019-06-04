@@ -1,13 +1,618 @@
-<!doctype HTML>
+<!DOCTYPE html>
 <html>
+<title>Ledger</title>
 <head>
-	<title>
-		Tesla Works Finance
-	</title>
-</head>
-<body>
-	<h1>
-		Hello. This is the Tesla Works ledger!
-	</h1>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" type="text/css">
+  <link type="text/css" rel="stylesheet" href="css/bootstrap.css"/>
+  <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css"/>
+  <link rel="stylesheet" href="css/munchi.css" type="text/css">
+  <link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
+
+  <link rel="stylesheet" href="styles/all.css" />
+
+  <script src="js/jquery.min.js"></script>
+  <script src="js/kendo.all.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
+  
+    </head>
+
+<body class="geometry">
+<!--<div id="banner">
+		<div id="banner-content">
+    Bug, comment, suggestion? <a href="mailto:knuds208@umn.edu" style="color: #FFFF00">Click here!</a>
+		</div>
+	</div>-->
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #333333;">
+        <a class="navbar-brand" href="javascript:;"><img src="images/cogbluewhite.png" height="26"> Tesla Works Finance</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li><a class="nav-link animate-underline" href="home"><i class="fa fa-home"></i> Home</a></li>
+                <li class="active"><a class="nav-link animate-underline" href="javascript:;"><i class="fa fa-table"></i> Ledger</a></li>
+                <li><a class="nav-link animate-underline" href="graphs"><i class="fa fa-chart-pie"></i> Graphs</a></li>
+                <li><a class="nav-link animate-underline" href="receiptupload"><i class="fa fa-receipt"></i> Receipts</a></li>
+                <li><a class="nav-link animate-underline" href="prmanage"><i class="fa fa-tags"></i> Purchase Requests</a></li>
+                <li class="dropdown"><a class="nav-link animate-underline" data-toggle="dropdown" href="#"><i class="fa fa-tshirt"></i> Swag ▽</a>
+                    <ul class="dropdown-menu">
+                            <li><a style="color: black;" href="swagpurchase" class="nav-link"><i class="fa fa-shopping-cart fa-shopping-cart"></i> Purchase</a></li>
+                            <li><a style="color: black;" href="swagmanage" class="nav-link"><i class="fa fa-box-open fa-box-open"></i> Manage Swag</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown"><a class="nav-link animate-underline" data-toggle="dropdown" href="#"><i class="fa fa-cogs"></i> Manage ▽</a>
+                    <ul class="dropdown-menu">
+                            <li><a style="color: black;" href="funding" class="nav-link"><i class="fa fa-dollar-sign"></i> Funding</a></li>
+                            <li><a style="color: black;" href="projects" class="nav-link"><i class="fa fa-project-diagram"></i> Projects</a></li>
+                            <li><a style="color: black;" href="users" class="nav-link"><i class="fa fa-users-cog"></i> Users</a></li>
+                    </ul>
+                </li>
+                <li><a class="nav-link animate-underline" href="profile"><i class="fa fa-user"></i> Profile</a></li>
+                <li><a class="nav-link animate-underline" href="logout"><i class="fa fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+</nav>
+  <div class="py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 class="">Tesla Works Ledger</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="py-5">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+      <div id="example">
+        Fiscal Year: <input id="fydropdown"/><br><br>
+        <div id="grid"></div>
+        <script type="text/x-kendo-template" id="itemTemplate">
+          <div class="tabstrip">
+            <ul>
+              <li class="k-state-active">
+              <i class="fa fa-box fa-box"></i>&nbsp;Items
+              </li>
+              <li>
+                <i class="fa fa-link"></i>&nbsp;Link Item
+              </li>
+            </ul>
+            <div>
+              <div class="itemListGrid"></div>
+            </div>
+            <div>
+              <div class="addItemGrid"></div>
+              <label>No Receipt Required&nbsp;</label><input type="checkbox" id="noReceiptCheck" name="noReceiptCheck"><br>
+              <button class="btn btn-primary" name="addItemButton" onclick="addSubmit();"><i class="fa fa-plus fa-plus"></i>&nbsp;Add</button>
+            </div>
+        </script>
+        <script>
+          var notification;
+          var itemAddID = "0";
+          var selectedLedgerItemID = "0";
+          var selectedFiscalYear = "0";
+          $(document).ready(function () {
+            $("#fydropdown").kendoDropDownList({
+              dataTextField: "year",
+              dataValueField: "year",
+              dataSource: {
+                transport: {
+                  read: {
+                    dataType: "json",
+                    url: "api/FETCHYear.php",
+                  }
+                }
+              },
+              change: function(e) {
+                var value = this.value();
+                selectedFiscalYear = value;
+                dataSource.read();
+              },
+              dataBound: function(e) {
+                var value = this.value();
+                selectedFiscalYear = value;
+                dataSource.read();
+              }
+            });
+            dataSource = new kendo.data.DataSource({
+              transport: {
+                read: {
+                  url: "api/LedgerFETCH.php",
+                  dataType: "json"
+                },
+                update: {
+                  url: "api/LedgerUPDATE.php",
+                  dataType: "json"
+                },
+                create: {
+                  url: "api/LedgerCREATE.php",
+                  dataType: "json"
+                },
+                destroy: {
+                  url: "api/LedgerDESTROY.php",
+                  dataType: "json"
+                },
+                parameterMap: function(options, operation) {
+                  if (operation == "read" ) {
+                    return {
+                      year: selectedFiscalYear
+                    };
+                  } else if (operation == "create") {
+                    return {models: kendo.stringify(options.models), year: selectedFiscalYear};
+                  } else {
+                    return {models: kendo.stringify(options.models)};
+                  }
+                }
+              },
+              batch: true,
+              pageSize: 50,
+              schema: {
+                model: {
+                  id: "ledgerid",
+                  fields: {
+                    ledgerid: { editable: false, nullable: false },
+                    date: { type: "date", validation: { required: true} },
+                    type: { validation: { required: true} },
+                    checknum: {},
+                    receipt: { editable: false },
+                    expense: { type: "decimal" },
+                    deposit: { type: "decimal" },
+                    source: { validation: { required: true } },
+                    description: { validation: { required: true } },
+                    project: {},
+                    externalfunding: {},
+                    income: {},
+                    ssf: { validation: {required: true } },
+                    category: {},
+                    allocation: {}
+                  }
+                }
+              }
+            });
+            $("#grid").kendoGrid({
+              dataSource: dataSource,
+              pageable: {
+                numeric: false,
+                previousNext: false
+              },
+              height: 1000,
+              sortable: true,
+              filterable: {
+                extra: false,
+                operators: {
+                  string: {
+                    contains: "Contains",
+                    startswith: "Starts with",
+                    eq: "Is equal to",
+                    neq: "Is not equal to"
+                  }
+                }
+              },
+              groupable: true,
+              scrollable: {
+                endless: true
+              },
+              resizable: true,
+              reorderable: true,
+              selectable: "row",
+              columnMenu: true,
+              detailTemplate: kendo.template($("#itemTemplate").html()),
+              detailInit: detailInit,
+<?php
+  if($logged_role == 'Admin') :
+?>
+              toolbar: ["create", "excel"],
+<?php
+   else :
+
+?>
+              toolbar: ["excel"],
+<?php
+  endif;
+?>
+              excel: {
+                fileName: "TeslaWorksLedgerExport.xlsx",
+                filterable: true
+              },
+              columns: [
+                { field:"date", title: "Date", format: "{0:MM/dd/yyyy}", width: "120px" },
+                { field:"type", title: "Type", width: "90px", editor: typeDropDownEditor },
+                { field:"checknum", title: "Check #", width: "80px", format: "{0:n0}" },
+                { field:"receipt", title: "Receipt?", width: "80px", editor: receiptDropDownEditor, hidden: true },
+                { field:"expense", title: "Expense", format: "{0:c}", width: "85px", footerTemplate: totalExpense },
+                { field:"deposit", title: "Deposit", format: "{0:c}", width: "85px", footerTemplate: totalIncome },
+                { field:"source", title: "Source", width: "100px" },
+                { field:"description", title: "Description", width: "200px", footerTemplate: totalBalance },
+                { field:"project", title: "Project", width: "110px", editor: projectDropDownEditor },
+                { field:"externalfunding", title: "External Funding", width: "90px", editor: externalfundingDropDownEditor, hidden: true },
+                { field:"income", title: "Income Category", width: "90px", editor: incomecategoryDropDownEditor, hidden: true },
+                { field:"ssf", title: "SSF?", width: "80px", editor: ssfDropDownEditor },
+                { field:"category", title: "Category", width: "105px", editor: categoryDropDownEditor },
+<?php
+  if($logged_role == 'Admin') :
+?>
+                { field:"allocation", title: "Allocation", width: "105px", editor: allocationDropDownEditor },
+                { command: {text: " ", click: showReceipt, iconClass: "fa fa-receipt"}, title: " ", width: "50px"},
+                { command: ["edit", "destroy"], title: "&nbsp", width: "160px"}
+<?php
+   else :
+?>
+                { field:"allocation", title: "Allocation", width: "105px", editor: allocationDropDownEditor },
+                { command: {text: " ", click: showReceipt, iconClass: "fa fa-receipt"}, title: " ", width: "50px"}
+<?php
+  endif;
+?>
+              ],
+              editable: "popup"
+            });
+            notification = $("#notification").kendoNotification({
+              position: {
+                pinned: true,
+                top: 30,
+                right: 30
+              },
+              autoHideAfter: 0,
+              stacking: "down",
+              templates: [{
+                type: "error",
+                template: $("#noReceiptTemplate").html()
+              }, {
+                type: "success",
+                template: $("#itemAddedTemplate").html()
+              }]
+            }).data("kendoNotification");
+          });
+          function detailInit(e) {
+            var detailRow = e.detailRow;
+
+            detailRow.find(".tabstrip").kendoTabStrip({
+              animation: {
+                open: { effects: "fadeIn" }
+              }
+            });
+
+            detailRow.find(".itemListGrid").kendoGrid({
+              dataSource: {
+                transport: {
+                  read: {
+                    url: "api/purchaserequestItemFETCHAll.php",
+                    dataType: "json"
+                  },
+                },
+                filter: { field: "ledgerid", operator: "eq", value: e.data.ledgerid}
+              },
+                columns: [
+                  { field: "ledgerid", hidden: true },
+                  { field: "name", title: "Item Name", width: "70px" },
+                  { field: "total", title: "Total Price", width: "70px" },
+                  { command: {text: " ", click: showReceipt, iconClass: "fa fa-receipt" }, title: "Show Receipt", width: "50px" }
+                ]
+            });
+
+            detailRow.find(".addItemGrid").kendoGrid({
+              dataSource: {
+                transport: {
+                  read: {
+                    url: "api/purchaserequestItemFETCHAll.php",
+                    dataType: "json"
+                  },
+                },
+                filter: [
+                  { field: "project", operator: "eq", value: e.data.project },
+                  { field: "ledgerid", operator: "eq", value: ""}
+                ] 
+              },
+              change: function(e) {
+                var detailGridWrapper = this.wrapper;
+            // GET PARENT ROW ELEMENT
+            var parentRow = detailGridWrapper.closest("tr.k-detail-row").prev("tr");
+            // GET PARENT GRID ELEMENT
+            var parentGrid = parentRow.closest("[data-role=grid]").data("kendoGrid");
+            // GET THE PARENT ROW MODEL
+            var parentModel = parentGrid.dataItem(parentRow);
+                var selectedItem = this.select();
+                var data = this.dataItem(selectedItem);
+
+                selectedLedgerItemID = parentModel.ledgerid;
+                itemAddID = data["purchaserequestitemid"]
+              },
+              selectable: "row",
+              columns: [
+                { field: "project", hidden: true },
+                { field: "name", title: "Item Name", width: "70px" },
+                { field: "total", title: "Total Price", width: "70px" },
+                { command: {text: " ", click: showReceipt, iconClass: "fa fa-receipt" }, title: "Show Receipt", width: "50px" }
+              ]
+            });
+          }
+          function addSelect(arg) {
+            var myGrid = $(".addItemGrid").data("kendoGrid");
+            var selectedItem = myGrid.dataItem(myGrid.select());
+            var parentData = myGrid.dataItem(arg.sender.element.closest("tr").prev());
+            selectedLedgerItemID = parentData["generalledgerid"];
+            itemAddID = selectedItem["purchaserequestitemid"];
+          }
+          function addSubmit() {
+            var obj = new Object();
+            obj.itemID = itemAddID;
+            obj.ledgerID = selectedLedgerItemID;
+            var dbParam = JSON.stringify(obj);
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("POST", "api/ledgerAssociateItem.php", true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send(dbParam);
+            notification.show({message: "Item successfully added!"}, "success");
+          }
+          function projectFilter(element) {
+            element.kendoDropDownList({
+              dataSource: project,
+              optionLabel: "--Select Value--"
+            });
+          }
+          function showReceipt(e) {
+            e.preventDefault();
+
+            var tr = $(e.target).closest("tr");
+
+            var data = this.dataItem(tr);
+
+            if(data["itemGUID"] != undefined ) {
+              if(data["receiptfile"] === null) {
+                notification.show({title: "Error", message: "This item does not have a receipt attached."}, "error");
+              //alert("This item does not have a receipt currently uploaded.");
+              } else {
+              //var win = window.open("receipts/" + data["itemGUID"] + "/" + data["receiptfile"], '_blank');
+              var win = window.open("https://drive.google.com/open?id=" + data["receiptfile"], '_blank');
+              win.focus();
+             }
+            }            
+          }
+          function totalExpense() {
+            var data = dataSource.data();
+            var item, sum = 0;
+            for (var idx = 0; idx < data.length; idx++) {
+              item = data[idx];
+              sum += kendo.parseFloat(item.expense);
+            }
+            return kendo.toString(sum, "c");
+          }
+          function totalIncome() {
+            var data = dataSource.data();
+            var item, sum = 0;
+            for (var idx = 0; idx < data.length; idx++) {
+              item = data[idx];
+              sum += kendo.parseFloat(item.deposit);
+            }
+            return kendo.toString(sum, "c");
+          }
+          function totalBalance() {
+            var data = dataSource.data();
+            var item, sum = 0;
+            for (var idx = 0; idx < data.length; idx++) {
+              item = data[idx];
+              sum = sum + (kendo.parseFloat(item.deposit)) - (kendo.parseFloat(item.expense));
+            }
+            return "Balance: " + kendo.toString(sum, "c");
+          }
+          function ssfDropDownEditor(container, options) {
+              $('<input required name="' + options.field + '"/>')
+              .appendTo(container)
+              .kendoDropDownList({
+                autoBind: false,
+                dataTextField: "name",
+                dataValueField: "name",
+                dataSource: {
+                  transport: {
+                    read: {
+                      url: "api/FETCHSSF.php",
+                      dataType: "json",
+                      contentType: "application/json"
+                    }
+                  }
+                }
+              });
+            }
+            function typeDropDownEditor(container, options) {
+              $('<input required name="' + options.field + '"/>')
+              .appendTo(container)
+              .kendoDropDownList({
+                autoBind: false,
+                dataTextField: "name",
+                dataValueField: "name",
+                dataSource: {
+                  transport: {
+                    read: {
+                      url: "api/FETCHType.php",
+                      dataType: "json",
+                      contentType: "application/json"
+                    }
+                  }
+                }
+              });
+            }
+            function receiptDropDownEditor(container, options) {
+              $('<input required name="' + options.field + '"/>')
+              .appendTo(container)
+              .kendoDropDownList({
+                autoBind: false,
+                dataTextField: "name",
+                dataValueField: "name",
+                dataSource: {
+                  transport: {
+                    read: {
+                      url: "api/FETCHReceipt.php",
+                      dataType: "json",
+                      contentType: "application/json"
+                    }
+                  }
+                }
+              });
+            }
+            function projectDropDownEditor(container, options) {
+              $('<input name="' + options.field + '"/>')
+              .appendTo(container)
+              .kendoDropDownList({
+                autoBind: false,
+                dataTextField: "name",
+                dataValueField: "name",
+                dataSource: {
+                  transport: {
+                    read: {
+                      url: "api/FETCHProject.php",
+                      dataType: "json",
+                      contentType: "application/json"
+                    }
+                  }
+                }
+              });
+            }
+            function externalfundingDropDownEditor(container, options) {
+              $('<input name="' + options.field + '"/>')
+              .appendTo(container)
+              .kendoDropDownList({
+                autoBind: false,
+                dataTextField: "name",
+                dataValueField: "name",
+                dataSource: {
+                  transport: {
+                    read: {
+                      url: "api/FETCHExternalFunding.php",
+                      dataType: "json",
+                      contentType: "application/json"
+                    }
+                  }
+                }
+              });
+            }
+            function incomecategoryDropDownEditor(container, options) {
+              $('<input name="' + options.field + '"/>')
+              .appendTo(container)
+              .kendoDropDownList({
+                autoBind: false,
+                dataTextField: "name",
+                dataValueField: "name",
+                dataSource: {
+                  transport: {
+                    read: {
+                      url: "api/FETCHIncomeCategory.php",
+                      dataType: "json",
+                      contentType: "application/json"
+                    }
+                  }
+                }
+              });
+            }
+            function categoryDropDownEditor(container, options) {
+              $('<input name="' + options.field + '"/>')
+              .appendTo(container)
+              .kendoDropDownList({
+                autoBind: false,
+                dataTextField: "name",
+                dataValueField: "name",
+                dataSource: {
+                  transport: {
+                    read: {
+                      url: "api/FETCHCategory.php",
+                      dataType: "json",
+                      contentType: "application/json"
+                    }
+                  }
+                }
+              });
+            }
+            function allocationDropDownEditor(container, options) {
+              $('<input name="' + options.field + '"/>')
+              .appendTo(container)
+              .kendoDropDownList({
+                autoBind: false,
+                dataTextField: "name",
+                dataValueField: "name",
+                dataSource: {
+                  transport: {
+                    read: {
+                      url: "api/FETCHAllocation.php",
+                      dataType: "json",
+                      contentType: "application/json"
+                    }
+                  }
+                }
+              });
+            }
+          </script>
+          <script id="itemAddedTemplate" type="text/x-kendo-template">
+            <div class="itemAddSuccess">
+              <img src="images/success-icon.png" />
+              <h3>#= message #</h3>
+            </div>
+          </script>
+          <script id="noReceiptTemplate" type="text/x-kendo-template">
+            <div class="noReceipt">
+              <img src="images/error-icon.png" />
+              <h3>#= title #</h3>
+              <p>#= message #</p>
+            </div>
+          </script>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <style>
+    .k-notification {
+      border: 0;
+    }
+    /* Error template */
+              .k-notification-error.k-group {
+                    background: rgba(100%,0%,0%,.7);
+                    color: #ffffff;
+                }
+                .noReceipt {
+                    width: 300px;
+                    height: 125px;
+                }
+                .noReceipt h3 {
+                    font-size: 1em;
+                    font-weight: bold;
+                    padding: 32px 10px 5px;
+                }
+                .noReceipt img {
+                    float: left;
+                    margin: 30px 15px 30px 30px;
+                }
+
+                /* Success template */
+                .k-notification-success {
+                    background: rgba(0%,60%,0%,.7);
+                    color: #fff;
+                }
+                .itemAddSuccess {
+                    width: 300px;
+                    height: 100px;
+                    padding: 0 30px;
+                    line-height: 100px;
+                }
+                .itemAddSuccess h3 {
+                    font-size: 1em;
+                    color: white;
+                    font-weight: normal;
+                    display: inline-block;
+                    vertical-align: middle;
+                }
+                .itemAddSuccess img {
+                    display: inline-block;
+                    vertical-align: middle;
+                    margin-right: 10px;
+                }
+  </style>
+  <footer>
+	  <p class="text-center" style="color:black;">&copy; 2018 Tesla Works</p>
+  </footer>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
 </body>
+
 </html>
