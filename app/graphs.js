@@ -8,8 +8,11 @@ router.get('/', middleware.checkAuth, function(req, res) {
 });
 
 router.get('/spending/:year', function(req, res) {
-	var query = "select * from spending2019";
+	var query = "select * from spending where year = ?"; 
 	var results = con.query(query,
+	[
+		req.params.year
+	],
 	function(error, results, fields) {
 		if (error) {
 			res.status(200).json({error: error.code});
