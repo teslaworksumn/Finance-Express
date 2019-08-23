@@ -101,7 +101,11 @@
           					dataType: "json",
           					url: "years",
           				}
-          			}
+          			},
+                sort: {
+                  field: "year",
+                  dir: "desc"
+                }
           		},
               change: function(e) {
                 var value = this.value();
