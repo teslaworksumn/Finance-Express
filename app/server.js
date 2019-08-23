@@ -27,6 +27,7 @@ function main () {
   //app.use(session({secret: "tesla_works_is_amazing", saveUninitialized: false, resave: false}));
   app.use(session({secret: "tesla_works_is_amazing", saveUninitialized: false, cookie: { maxAge: 60000 }, resave: false}));
   app.use('/', mainpage);
+  app.use('/home', mainpage);
   app.use('/auth', auth);
   app.use('/ledger', ledger);
   app.use('/graphs', graphs);
