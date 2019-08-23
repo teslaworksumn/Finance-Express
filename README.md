@@ -35,7 +35,7 @@ prevent it from being source controlled with the command:
 mv database.example.js database.js
 ```
 
-The `database.example.php` file looks like:
+The `database.example.js` file looks like:
 ```javascript
 var mysql = require('mysql');
 
