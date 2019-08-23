@@ -25,7 +25,7 @@ function main () {
   // Routes & Handlers
   app.use(express.static(__dirname + '/src'))
   //app.use(session({secret: "tesla_works_is_amazing", saveUninitialized: false, resave: false}));
-  app.use(session({secret: "tesla_works_is_amazing", saveUninitialized: false, cookie: { maxAge: 60000 }, resave: false}));
+  app.use(session({secret: "tesla_works_is_amazing", saveUninitialized: false, cookie: { maxAge: 1800000 }, resave: false}));
   app.use('/', mainpage);
   app.use('/home', mainpage);
   app.use('/auth', auth);
