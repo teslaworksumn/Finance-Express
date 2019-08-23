@@ -67,27 +67,60 @@
       <div class="row">
         <div class="col-md-2"></div>
         <div class="col-md-8">
+            Fiscal Year: <input id="fydropdown"/><br><br>
         <div id="projectSpendingPie"></div>
         </div>
         <div class="col-md-12">
         <div id="projectSpendingGraph"></div>
         </div>
         <script>
+          var selectedFiscalYear = "0";
+          var baseURL = "graphs/spending/"
+          var dataSource;
+          function createDataSource() {
+            dataSource = new kendo.data.DataSource({
+              transport: {
+                read: {
+                  url: "graphs/spending/" + $("#fydropdown").val(),
+                  dataType: "json"
+                }
+              },
+              sort: {
+                field: "project",
+                dir: "asc"
+              }
+            });
+          }
+          function addFYDropdown() {
+          	$("#fydropdown").kendoDropDownList({
+          		dataTextField: "year",
+          		dataValueField: "year",
+          		dataSource: {
+          			transport: {
+          				read: {
+          					dataType: "json",
+          					url: "years",
+          				}
+          			}
+          		},
+              change: function(e) {
+                var value = this.value();
+                selectedFiscalYear = value;
+                dataSource.transport.options.read.url = baseURL + selectedFiscalYear;
+                dataSource.read();
+              },
+              dataBound: function(e) {
+                var value = this.value();
+                selectedFiscalYear = value;
+                dataSource.transport.options.read.url = baseURL + selectedFiscalYear;
+                dataSource.read();
+              }
+          	});
+          }
           function createPie() {
             $("#projectSpendingPie").kendoChart({
               theme: "sass",
-              dataSource: {
-                transport: {
-                  read: {
-                    url: "graphs/spending/2019",
-                    dataType: "json"
-                  }
-                },
-                sort: {
-                  field: "project",
-                  dir: "asc"
-                }
-              },
+              dataSource: dataSource,
               title: {
                 text: "Spending by Project"
               },
@@ -114,18 +147,7 @@
           function createChart() {
               $("#projectSpendingGraph").kendoChart({
                 theme: "sass",
-                dataSource: {
-                  transport: {
-                    read: {
-                      url: "graphs/spending/2019",
-                      dataType: "json"
-                    }
-                  },
-                  sort: {
-                    field: "project",
-                    dir: "asc"
-                  }
-                },
+                dataSource: dataSource,
                 title: {
                   text: "--------------"
                 },
@@ -166,6 +188,8 @@
               });
           }
           function createCharts() {
+            createDataSource();
+          	addFYDropdown();
             createChart();
             createPie();
           }
