@@ -94,7 +94,7 @@
           var itemAddID = "0";
           var selectedLedgerItemID = "0";
           var selectedFiscalYear = "0";
-          var baseURL = "ledger/";
+          var baseURL = "ledger/fetch/";
           $.get("auth/role", function(data) {
             var toolbarOptions = [];
             var columnOptions = [];
@@ -144,7 +144,7 @@
             dataSource = new kendo.data.DataSource({
               transport: {
                 read: {
-                  url: "ledger/" + $("#fydropdown").val(),
+                  url: "ledger/fetch/" + $("#fydropdown").val(),
                   dataType: "json"
                 },
                 update: {
@@ -152,7 +152,7 @@
                   dataType: "json"
                 },
                 create: {
-                  url: "api/LedgerCREATE.php",
+                  url: "ledger/insert",
                   dataType: "json"
                 },
                 destroy: {
@@ -392,7 +392,7 @@
                 dataSource: {
                   transport: {
                     read: {
-                      url: "api/FETCHSSF.php",
+                      url: "ledger/info/ssf",
                       dataType: "json",
                       contentType: "application/json"
                     }
@@ -410,7 +410,7 @@
                 dataSource: {
                   transport: {
                     read: {
-                      url: "api/FETCHType.php",
+                      url: "ledger/info/type",
                       dataType: "json",
                       contentType: "application/json"
                     }
@@ -428,7 +428,7 @@
                 dataSource: {
                   transport: {
                     read: {
-                      url: "api/FETCHReceipt.php",
+                      url: "ledger/info/receipt",
                       dataType: "json",
                       contentType: "application/json"
                     }
@@ -446,7 +446,7 @@
                 dataSource: {
                   transport: {
                     read: {
-                      url: "api/FETCHProject.php",
+                      url: "ledger/info/project",
                       dataType: "json",
                       contentType: "application/json"
                     }
@@ -464,7 +464,7 @@
                 dataSource: {
                   transport: {
                     read: {
-                      url: "api/FETCHExternalFunding.php",
+                      url: "ledger/info/externalfunding",
                       dataType: "json",
                       contentType: "application/json"
                     }
@@ -482,7 +482,7 @@
                 dataSource: {
                   transport: {
                     read: {
-                      url: "api/FETCHIncomeCategory.php",
+                      url: "ledger/info/income",
                       dataType: "json",
                       contentType: "application/json"
                     }
@@ -500,7 +500,7 @@
                 dataSource: {
                   transport: {
                     read: {
-                      url: "api/FETCHCategory.php",
+                      url: "ledger/info/category",
                       dataType: "json",
                       contentType: "application/json"
                     }
@@ -518,7 +518,7 @@
                 dataSource: {
                   transport: {
                     read: {
-                      url: "api/FETCHAllocation.php",
+                      url: "ledger/info/allocation",
                       dataType: "json",
                       contentType: "application/json"
                     }

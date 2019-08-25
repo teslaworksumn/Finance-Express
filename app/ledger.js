@@ -7,7 +7,7 @@ router.get('/', middleware.checkAuth, function(req, res) {
   res.sendFile(__dirname + '/src/ledger.html');
 });
 
-router.get('/:year', middleware.checkAuth, function(req, res) {
+router.get('/fetch/:year', middleware.checkAuth, function(req, res) {
 	var query = `select 
         ledgerid,
         date,
@@ -38,6 +38,119 @@ router.get('/:year', middleware.checkAuth, function(req, res) {
 			var resultJson = JSON.stringify(results);
 			resultJson = JSON.parse(resultJson);
 			res.json(resultJson);
+		}
+	});
+});
+
+router.get('/info/:term', middleware.checkAuth, function(req, res) {
+	var query = "";
+	switch (req.params.term) {
+		case "ssf":
+			query = "select * from ssfoptions";
+			break;
+		case "type":
+			query = "select * from ledgertype";
+			break;
+		case "receipt":
+			query = "select * from receiptstatus";
+			break;
+		case "project":
+			query = "select * from project";
+			break;
+		case "externalfunding":
+			query = "select * from externalfunding";
+			break;
+		case "income":
+			query = "select * from incomecategory";
+			break;
+		case "category":
+			query = "select * from category";
+			break;
+		case "allocation":
+			query = "select * from allocation";
+			break;
+	}
+	var results = con.query(query, function(error, results, fields) {
+		if (error) {
+			res.status(200).json({error: error.code});
+		} else {
+			var resultJson = JSON.stringify(results);
+			resultJson = JSON.parse(resultJson);
+			res.json(resultJson);
+		}
+	});
+});
+
+router.get('/insert', middleware.checkAuth, function(req, res) {
+	var values = JSON.parse(req.query.models);
+	var year = req.query.year;
+	values = values[0];
+
+	var date = values.date;
+	var type = values.type;
+	var checknum = values.checknum;
+	var receipt = values.receipt;
+	var source = values.source;
+	var description = values.description;
+	var project = values.project;
+	var externalfunding = values.externalfunding;
+	var incomecat = values.income;
+	var ssf = values.ssf;
+	var category = values.category;
+	var allocation = values.allocation;
+	var expense = values.expense;
+	var deposit = values.deposit;
+
+	date = date.substr(0,10);
+
+	if(expense == '') {
+		expense = 0.00;
+	}
+	if(deposit == '') {
+		deposit = 0.00;
+	}
+
+	var query = `insert into generalledger 
+	(date,
+	ledgertypeid,
+	checknum,
+	receiptstatusid,
+	expense,
+	deposit,
+	source,
+	description,
+	projectid,
+	externalfundingid,
+	incomecategoryid,
+	ssfoptionsid,
+	categoryid,
+	allocationid,
+	fiscalyearid) values 
+	(?,(select ledgertypeid from ledgertype where name = ?),?,(select receiptstatusid from receiptstatus where name = ?),?,?,?,?,(select projectid from project where name = ?),(select externalfundingid from externalfunding where name = ?),(select incomecategoryid from incomecategory where name=?),(select ssfoptionsid from ssfoptions where name=?),(select categoryid from category where name=?),(select allocationid from allocation where name=?),(select fiscalyearid from fiscalyear where year=?))`;
+
+	var results = con.query(query,
+	[
+		date,
+		type,
+		checknum,
+		receipt,
+		expense,
+		deposit,
+		source,
+		description,
+		project,
+		externalfunding,
+		incomecat,
+		ssf,
+		category,
+		allocation,
+		year
+	],
+	function(error, results, fields) {
+		if(error) {
+			res.status(200).json({error: error.code});
+		} else {
+			res.status(200).json({success: "Line entered successfully"});
 		}
 	});
 });
