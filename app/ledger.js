@@ -81,6 +81,79 @@ router.get('/info/:term', middleware.checkAuth, function(req, res) {
 	});
 });
 
+router.get('/update', middleware.checkAuth, function(req, res) {
+	var values = JSON.parse(req.query.models);
+	values = values[0];
+
+	var date = values.date;
+	var type = values.type;
+	var checknum = values.checknum;
+	var receipt = values.receipt;
+	var source = values.source;
+	var description = values.description;
+	var project = values.project;
+	var externalfunding = values.externalfunding;
+	var incomecat = values.income;
+	var ssf = values.ssf;
+	var category = values.category;
+	var allocation = values.allocation;
+	var expense = values.expense;
+	var deposit = values.deposit;
+	var ledgerid = values.ledgerid;
+
+	date = date.substr(0,10);
+
+	if(expense == '') {
+		expense = 0.00;
+	}
+	if(deposit == '') {
+		deposit = 0.00;
+	}
+
+	var query = `update generalledger set
+	date = ?,
+    ledgertypeid = (select ledgertypeid from ledgertype where name = ?),
+    checknum = ?,
+    receiptstatusid = (select receiptstatusid from receiptstatus where name = ?),
+    expense = ?,
+    deposit = ?,
+    source = ?,
+    description = ?,
+    projectid = (select projectid from project where name = ?),
+    externalfundingid = (select externalfundingid from externalfunding where name = ?),
+    incomecategoryid = (select incomecategoryid from incomecategory where name = ?),
+    ssfoptionsid = (select ssfoptionsid from ssfoptions where name = ?),
+    categoryid = (select categoryid from category where name = ?),
+    allocationid = (select allocationid from allocation where name = ?)
+    where ledgerid = ?`;
+
+    var results = con.query(query,
+	[
+		date,
+		type,
+		checknum,
+		receipt,
+		expense,
+		deposit,
+		source,
+		description,
+		project,
+		externalfunding,
+		incomecat,
+		ssf,
+		category,
+		allocation,
+		ledgerid
+	],
+	function(error, results, fields) {
+		if(error) {
+			res.status(200).json({error: error.code});
+		} else {
+			res.status(200).json({success: "Line entered successfully"});
+		}
+	});
+});
+
 router.get('/insert', middleware.checkAuth, function(req, res) {
 	var values = JSON.parse(req.query.models);
 	var year = req.query.year;
