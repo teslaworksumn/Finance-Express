@@ -11,8 +11,8 @@ website is served by a NodeJS Express server.
 In order for a local version of this website to be build and tested, the
 following must be installed and configured:
 
-* Node with the Express extension
-* MySQL
+* Node.js with the Express extension
+* MySQL 5.7
 
 On an Ubuntu machine, Node with NPM can be installed with
 ```
