@@ -81,6 +81,24 @@ router.get('/info/:term', middleware.checkAuth, function(req, res) {
 	});
 });
 
+router.get('/destroy', middleware.checkAuth, function(req, res) {
+	var values = JSON.parse(req.query.models);
+	values = values[0];
+
+	var ledgerid = values.ledgerid;
+
+	var query = `delete from generalledger where ledgerid = ?`;
+
+	var results = con.query(query, [ledgerid],
+	function(error, results, fields) {
+		if(error) {
+			res.status(200).json({error: error.code});
+		} else {
+			res.status(200).json({success: "Line deleted successfully"});
+		}
+	});
+});
+
 router.get('/update', middleware.checkAuth, function(req, res) {
 	var values = JSON.parse(req.query.models);
 	values = values[0];
