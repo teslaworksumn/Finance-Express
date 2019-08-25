@@ -14,10 +14,17 @@ router.post('/', function(req, res) {
   //  res.send(req.session.user);
   //});
   req.session.user = userName;
+  // The user role is currently hardcoaded in for now.
+  // There will have to be a lookup to the DB to determine the actual role.
+  req.session.userRole = "Admin";
   res.send(req.session.user);
   //session.save();
   //console.log(req.session.user);
 });
+
+router.get('/role', function(req, res) {
+  res.send(req.session.userRole);
+})
 
 router.post('/checkMe', function(req, res) {
   res.send(req.session.user);

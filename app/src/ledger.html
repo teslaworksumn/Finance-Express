@@ -94,6 +94,24 @@
           var itemAddID = "0";
           var selectedLedgerItemID = "0";
           var selectedFiscalYear = "0";
+          var baseURL = "ledger/";
+          $.get("auth/role", function(data) {
+            var toolbarOptions = [];
+            var columnOptions = [];
+            if(data == "Admin") {
+              toolbarOptions = ["create","excel"];
+              columnOptions = getColumns(data);
+            } else {
+              toolbarOptions = ["excel"];
+              columnOptions = getColumns(data);
+            }
+            $("#grid").data("kendoGrid").setOptions({
+              toolbar: toolbarOptions
+            });
+            $("#grid").data("kendoGrid").setOptions({
+              columns: columnOptions
+            });
+          });
           $(document).ready(function () {
             $("#fydropdown").kendoDropDownList({
               dataTextField: "year",
@@ -102,25 +120,31 @@
                 transport: {
                   read: {
                     dataType: "json",
-                    url: "api/FETCHYear.php",
+                    url: "years",
                   }
+                },
+                sort: {
+                  field: "year",
+                  dir: "desc"
                 }
               },
               change: function(e) {
                 var value = this.value();
                 selectedFiscalYear = value;
+                dataSource.transport.options.read.url = baseURL + selectedFiscalYear;
                 dataSource.read();
               },
               dataBound: function(e) {
                 var value = this.value();
                 selectedFiscalYear = value;
+                dataSource.transport.options.read.url = baseURL + selectedFiscalYear;
                 dataSource.read();
               }
             });
             dataSource = new kendo.data.DataSource({
               transport: {
                 read: {
-                  url: "api/LedgerFETCH.php",
+                  url: "ledger/" + $("#fydropdown").val(),
                   dataType: "json"
                 },
                 update: {
@@ -201,51 +225,12 @@
               columnMenu: true,
               detailTemplate: kendo.template($("#itemTemplate").html()),
               detailInit: detailInit,
-<?php
-  if($logged_role == 'Admin') :
-?>
-              toolbar: ["create", "excel"],
-<?php
-   else :
-
-?>
-              toolbar: ["excel"],
-<?php
-  endif;
-?>
+              toolbar: [],
               excel: {
                 fileName: "TeslaWorksLedgerExport.xlsx",
                 filterable: true
               },
-              columns: [
-                { field:"date", title: "Date", format: "{0:MM/dd/yyyy}", width: "120px" },
-                { field:"type", title: "Type", width: "90px", editor: typeDropDownEditor },
-                { field:"checknum", title: "Check #", width: "80px", format: "{0:n0}" },
-                { field:"receipt", title: "Receipt?", width: "80px", editor: receiptDropDownEditor, hidden: true },
-                { field:"expense", title: "Expense", format: "{0:c}", width: "85px", footerTemplate: totalExpense },
-                { field:"deposit", title: "Deposit", format: "{0:c}", width: "85px", footerTemplate: totalIncome },
-                { field:"source", title: "Source", width: "100px" },
-                { field:"description", title: "Description", width: "200px", footerTemplate: totalBalance },
-                { field:"project", title: "Project", width: "110px", editor: projectDropDownEditor },
-                { field:"externalfunding", title: "External Funding", width: "90px", editor: externalfundingDropDownEditor, hidden: true },
-                { field:"income", title: "Income Category", width: "90px", editor: incomecategoryDropDownEditor, hidden: true },
-                { field:"ssf", title: "SSF?", width: "80px", editor: ssfDropDownEditor },
-                { field:"category", title: "Category", width: "105px", editor: categoryDropDownEditor },
-<?php
-  if($logged_role == 'Admin') :
-?>
-                { field:"allocation", title: "Allocation", width: "105px", editor: allocationDropDownEditor },
-                { command: {text: " ", click: showReceipt, iconClass: "fa fa-receipt"}, title: " ", width: "50px"},
-                { command: ["edit", "destroy"], title: "&nbsp", width: "160px"}
-<?php
-   else :
-?>
-                { field:"allocation", title: "Allocation", width: "105px", editor: allocationDropDownEditor },
-                { command: {text: " ", click: showReceipt, iconClass: "fa fa-receipt"}, title: " ", width: "50px"}
-<?php
-  endif;
-?>
-              ],
+              columns: [],
               editable: "popup"
             });
             notification = $("#notification").kendoNotification({
@@ -540,6 +525,45 @@
                   }
                 }
               });
+            }
+            function getColumns(userRole) {
+              var columnArr = [];
+              if(userRole == "Admin") { columnArr = [
+                { field:"date", title: "Date", format: "{0:MM/dd/yyyy}", width: "120px" },
+                { field:"type", title: "Type", width: "90px", editor: typeDropDownEditor },
+                { field:"checknum", title: "Check #", width: "80px", format: "{0:n0}" },
+                { field:"receipt", title: "Receipt?", width: "80px", editor: receiptDropDownEditor, hidden: true },
+                { field:"expense", title: "Expense", format: "{0:c}", width: "85px", footerTemplate: totalExpense },
+                { field:"deposit", title: "Deposit", format: "{0:c}", width: "85px", footerTemplate: totalIncome },
+                { field:"source", title: "Source", width: "100px" },
+                { field:"description", title: "Description", width: "200px", footerTemplate: totalBalance },
+                { field:"project", title: "Project", width: "110px", editor: projectDropDownEditor },
+                { field:"externalfunding", title: "External Funding", width: "90px", editor: externalfundingDropDownEditor, hidden: true },
+                { field:"income", title: "Income Category", width: "90px", editor: incomecategoryDropDownEditor, hidden: true },
+                { field:"ssf", title: "SSF?", width: "80px", editor: ssfDropDownEditor },
+                { field:"category", title: "Category", width: "105px", editor: categoryDropDownEditor },
+                { field:"allocation", title: "Allocation", width: "105px", editor: allocationDropDownEditor },
+                { command: {text: " ", click: showReceipt, iconClass: "fa fa-receipt"}, title: " ", width: "50px"},
+                { command: ["edit", "destroy"], title: "&nbsp", width: "160px"} ]
+              } else { columnArr = [
+                { field:"date", title: "Date", format: "{0:MM/dd/yyyy}", width: "120px" },
+                { field:"type", title: "Type", width: "90px", editor: typeDropDownEditor },
+                { field:"checknum", title: "Check #", width: "80px", format: "{0:n0}" },
+                { field:"receipt", title: "Receipt?", width: "80px", editor: receiptDropDownEditor, hidden: true },
+                { field:"expense", title: "Expense", format: "{0:c}", width: "85px", footerTemplate: totalExpense },
+                { field:"deposit", title: "Deposit", format: "{0:c}", width: "85px", footerTemplate: totalIncome },
+                { field:"source", title: "Source", width: "100px" },
+                { field:"description", title: "Description", width: "200px", footerTemplate: totalBalance },
+                { field:"project", title: "Project", width: "110px", editor: projectDropDownEditor },
+                { field:"externalfunding", title: "External Funding", width: "90px", editor: externalfundingDropDownEditor, hidden: true },
+                { field:"income", title: "Income Category", width: "90px", editor: incomecategoryDropDownEditor, hidden: true },
+                { field:"ssf", title: "SSF?", width: "80px", editor: ssfDropDownEditor },
+                { field:"category", title: "Category", width: "105px", editor: categoryDropDownEditor },
+                { field:"allocation", title: "Allocation", width: "105px", editor: allocationDropDownEditor },
+                { command: {text: " ", click: showReceipt, iconClass: "fa fa-receipt"}, title: " ", width: "50px"} ]
+              }
+
+              return columnArr;
             }
           </script>
           <script id="itemAddedTemplate" type="text/x-kendo-template">
