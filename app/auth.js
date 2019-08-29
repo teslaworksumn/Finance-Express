@@ -41,7 +41,7 @@ router.post('/checkMe', function(req, res) {
     res.send(req.session.user);
 })
 
-// Logs in a user with Google UMN credientials 
+// Logs in a user with Google UMN credientials
 // If a user has signed in before, simply lets them log in
 // If a user hasn't logged in before, adds them to the database and then logs them in
 // If a duplicate user exists, rejects the promise with an error message
