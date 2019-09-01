@@ -12,6 +12,7 @@ var ledger = require('./ledger.js');
 var graphs = require('./graphs.js');
 var auth = require('./auth.js');
 var info = require('./info.js');
+var pr = require('./pr.js');
 
 
 // Starting point of the server
@@ -32,6 +33,7 @@ function main () {
   app.use('/ledger', ledger);
   app.use('/graphs', graphs);
   app.use('/info', info);
+  app.use('/purchaserequest', pr);
   https.createServer({
     key: fs.readFileSync('server.key'),
     cert: fs.readFileSync('server.cert')

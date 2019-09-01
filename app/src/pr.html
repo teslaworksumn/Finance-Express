@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Purchase Request Form</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" type="text/css">
+    <link type="text/css" rel="stylesheet" href="css/bootstrap.css"/>
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css"/>
+    <link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
+    <link rel="stylesheet" href="css/munchi.css" type="text/css">
+
+    <link rel="stylesheet" href="styles/all.css" />
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/kendo.all.min.js"></script>
+    <script src="js/bootstrap-maxlength.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</head>
+
+<body class="geometry">
+<!--<div id="banner">
+        <div id="banner-content">
+            ** SITE CURRENTLY IN DEVELOPMENT - HOWEVER ALL DATA IS REAL **
+        </div>
+    </div> -->
+    <div class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="nav nav-pills" style="margin-left: 2em"><img alt="Tesla Works Logo" height="145" src="images/twlogofull.png"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 class="">Purchase Request Form</h1>
+                    <div class="py-5">
+                        <div class="container">
+                            <div class="prFormView">
+                                <div class="row">
+                                    <div class="col-md-6" style="margin: 0 auto;">
+                                        <p class="lead">Hi, this is the form you will use to make purchase requests.
+                                                        Please fill out the form below to the best of your ability, submit it, and we'll add your request to our agenda at the next officers meeting.
+                                                        Please also try to make it to the next meeting or have a representative.
+                                                        It is always better to have someone explain the items and create a connection with the officers' board!
+                                                        If you have any questions please add them to the last question box.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 loginBackground" style="margin: 0 auto;">
+                                        <form action="#" class="" onsubmit="return false">
+                                            <div class="form-group">
+                                                <label>Email Address*</label>
+                                                <input id="emailAddress" class="form-control" name="email" type="email" maxlength="45" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Project*</label>
+                                                <input id="projectSelection" class="form-control" name="project">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>What is your name?*</label>
+                                                <input id="yourName" class="form-control" name="name" type="text" maxlength="45" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>What is the total cost?* (Auto Calculated)</label>
+                                                <input id="totalCost" class="form-control" name="totalCost" type="number" step="0.01" disabled required>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 loginBackground" style="margin: 0 auto;">
+                                    <div class="form-group">
+                                        <label>Please enter the items you are requesting for purchase.* <strong>Note: The Cancel button has been disabled due to a known bug.</strong></label><div id="itemGrid" class="form-control" name="items"></div>
+                                    </div>
+                                    <div class="col-md-3">
+                                      <p class="lead"></p>
+                                    </div>
+                                    <div class="col-md-6 loginBackground" style="margin: 0 auto;">
+                                        <form>
+                                            <div class="form-group">
+                                                <label>On what day would you like to attend an officers' meeting? Please pick an actual officers' meeting day... Typically, meetings are held THURSDAYS at 8:45pm in Coffman 326.*</label>
+                                                <input id="attendDate" class="form-control" name="attendDate" type="date" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>What has your project been up to since your last update?*</label>
+                                                <input id="projectUpdate" class="form-control" name="projectUpdate" type="text" maxlength="500" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>How have your meetings been going?*</label>
+                                                <input id="meetingUpdate" class="form-control" name="meetingUpdate" type="text" maxlength="500" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>How many members have been going to your meetings?*</label>
+                                                <input id="memberCount"
+                                                       class="form-control"
+                                                       name="memberCount"
+                                                       type="number"
+                                                       step="1"
+                                                       maxlength="11"
+                                                       oninput="this.value = this.value.slice(0, this.maxLength)"
+                                                       required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Do you have any other comments, concerns. questions, or anything else you wish to let us know?</label>
+                                                <input id="comments" class="form-control" name="comments" type="text" maxlength="500">
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <button class="btn btn-primary" style="margin: 0 auto;" id="submitPurchase" name="submitPurchase" onclick="formSubmit();">
+                                        <i class="fa fa-arrow-up fa-arrow-up"></i>
+                                        &nbsp;Submit
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+    // Adds maxlength attributes to Kendo grid inputs
+    function onGridEditing(arg) {
+        arg.container.find("input[name='name']").attr('maxlength','500');
+        arg.container.find("input[name='description']").attr('maxlength','500');
+        arg.container.find("input[name='vendor']").attr('maxlength','45');
+        arg.container.find("input[name='link']").attr('maxlength','500');
+        // 10100 ensures the numbers are visible on top of the popup
+        setMaxLengthBoostrap(10100);
+    }
+    $(document).ready(function() {
+        myDataSource = new kendo.data.DataSource({
+            schema: {
+                model: {
+                    id: "tempID",
+                    fields: {
+                        tempId: { editable: "false" },
+                        name: {
+                            validation: {
+                                nameValidation: function (input) {
+                                    if (input.is("[name='name']") && input.val() != "") {
+                                        input.attr("data-namevalidation-msg", "Item name length cannot be more than 500 characters");
+                                        return input.val().length <= 500 && input.val().length >= 0;
+                                    }
+                                    return true;
+                                }
+                            }
+                        },
+                        quantity: { type: "number" },
+                        unitPrice: { type: "number" },
+                        total: { type: "number" },
+                        shipping: { type: "number" },
+                        tax: { type: "number" },
+                        total: { type: "number", editable: false },
+                        description: {
+                            validation: {
+                                descriptionValidation: function (input) {
+                                    if (input.is("[name='description']") && input.val() != "") {
+                                        input.attr("data-descriptionvalidation-msg", "Description cannot be more than 500 characters");
+                                        return input.val().length <= 500;
+                                    }
+                                    return true;
+                                }
+                            }
+                        },
+                        vendor: {
+                            validation: {
+                                vendorValidation: function (input) {
+                                    if (input.is("[name='vendor']") && input.val() != "") {
+                                        input.attr("data-vendorvalidation-msg", "Purchasing place cannot be more than 45 characters");
+                                        return input.val().length <= 45;
+                                    }
+                                    return true;
+                                }
+                            }
+                        },
+                        prtype: { },
+                        allocation: { },
+                        link: {
+                            validation: {
+                                linkValidation: function (input) {
+                                    if (input.is("[name='link']") && input.val() != "") {
+                                        input.attr("data-linkvalidation-msg", "Link cannot be more than 500 characters");
+                                        return input.val().length <= 500;
+                                    }
+                                    return true;
+                                }
+                            }
+                        },
+                    }
+                }
+            },
+            pageSize: 20
+        });
+        $("#projectSelection").kendoDropDownList({
+            dataTextField: "name",
+            dataValueField: "name",
+            dataSource: {
+            transport: {
+                read: {
+                    dataType: "json",
+                    url: "purchaserequest/projects",
+                    }
+                }
+            }
+        });
+        $("#itemGrid").kendoGrid({
+            dataSource: myDataSource,
+            height: 300,
+            resizable: true,
+            toolbar: ["create"],
+            edit: onGridEditing,
+            columns: [{
+                field: "name",
+                title: "Item",
+                width: 50
+            }, {
+                field: "quantity",
+                title: "Quantity",
+                width: 50
+            }, {
+                field: "unitPrice",
+                title: "Unit Price",
+                width: 50,
+                format: "{0:c}"
+            }, {
+                field: "shipping",
+                title: "Shipping",
+                hidden: true,
+                wigth: 50,
+                format: "{0:c}"
+            }, {
+                field: "tax",
+                title: "Tax",
+                hidden: true,
+                width: 50,
+                format: "{0:c}"
+            }, {
+                title: "Total",
+                template: "#= data.quantity * data.unitPrice + data.shipping + data.tax #",
+                width: 50,
+                format: "{0:c}"
+            }, {
+                field: "description",
+                title: "Description",
+                width: 200,
+            }, {
+                field: "vendor",
+                title: "Purchasing Place",
+                hidden: true,
+                width: 100
+            }, {
+                field: "prtype",
+                title: "Type",
+                hidden: true,
+                editor: prtypeDropDownEditor,
+                width: 50
+            }, {
+                field: "allocation",
+                title: "Category",
+                hidden: true,
+                editor: allocationDropDownEditor,
+                width: 50
+            }, {
+                field: "link",
+                title: "Link",
+                /* hidden: true, */
+                width: 50
+            }, {
+                command: ["edit", "destroy"],
+                title: "&nbsp",
+                width: "160px"
+            }],
+            editable: "popup",
+            cancel: function(e) {
+                e.preventDefault()
+            },
+            save: costSum,
+            remove: costSum
+        });
+    });
+    function totalAmount() {
+        var data = datasource.data();
+        var item, sum = 0;
+        for (var idx = 0; idx < data.length; idx++) {
+            item = data[idx];
+            sum += item.total;
+        }
+      return kendo.toString(sum, "c");
+    }
+    function allocationDropDownEditor(container, options) {
+        $('<input required name="' + options.field + '"/>')
+        .appendTo(container)
+        .kendoDropDownList({
+        autoBind: false,
+            dataTextField: "name",
+            dataValueField: "name",
+            dataSource: {
+            transport: {
+                read: {
+                    url: "purchaserequest/allocations",
+                        dataType: "json",
+                        contentType: "application/json"
+                    }
+                }
+            }
+        });
+    }
+    function prtypeDropDownEditor(container, options) {
+        $('<input required name="' + options.field + '"/>')
+        .appendTo(container)
+        .kendoDropDownList({
+        autoBind: false,
+            dataTextField: "name",
+            dataValueField: "name",
+            dataSource: {
+                transport: {
+                read: {
+                    url: "purchaserequest/prtypes",
+                        dataType: "json",
+                        contentType: "application/json"
+                    }
+                }
+            }
+        });
+    }
+    function costSum() {
+        var data = myDataSource.data();
+        var item, sum = 0;
+        for (var idx = 0; idx < data.length; idx++) {
+            item = data[idx];
+            sum = sum + ((kendo.parseFloat(item.quantity)) * (kendo.parseFloat(item.unitPrice)) + (kendo.parseFloat(item.shipping)) + (kendo.parseFloat(item.tax)));
+        }
+        document.getElementById("totalCost").value = kendo.toString(sum);
+    }
+    function formSubmit() {
+        var emailAddress     = document.getElementById("emailAddress").value;
+        var projectSelection = document.getElementById("projectSelection").value;
+        var yourName         = document.getElementById("yourName").value;
+        var totalCost        = document.getElementById("totalCost").value;
+        var attendDate       = document.getElementById("attendDate").value;
+        var projectUpdate    = document.getElementById("projectUpdate").value;
+        var meetingUpdate    = document.getElementById("meetingUpdate").value;
+        var memberCount      = document.getElementById("memberCount").value;
+        var comments         = document.getElementById("comments").value;
+        var itemJSON         = JSON.stringify(myDataSource.data());
+        if (
+            emailAddress == ""
+            || projectSelection == ""
+            || yourName == ""
+            || totalCost == ""
+            || attendDate == ""
+            || projectUpdate == ""
+            || meetingUpdate == ""
+            || memberCount == ""
+            || itemJSON == "[]"
+        ) {
+        } else {
+            var obj = new Object();
+            obj.email = emailAddress;
+            obj.project = projectSelection;
+            obj.totalCost = totalCost;
+            obj.attendDate = attendDate;
+            obj.projectUpdate = projectUpdate;
+            obj.name = yourName;
+            obj.meetingUpdate = meetingUpdate;
+            obj.memberCount = memberCount
+            obj.comments = comments;
+            obj.items = itemJSON;
+            var dbParam = JSON.stringify(obj);
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("POST", "api/purchaserequestCREATE.php", true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send(dbParam);
+            successAlert();
+        }
+    }
+</script>
+<script>
+// use Boostrap to display max length of input elements
+// allows a configurable z-index value for popups that have higher z-indices
+function setMaxLengthBoostrap(z_index) {
+    // default value of zIndex from original implementation of https://github.com/mimo84/bootstrap-maxlength
+    if (!z_index) {
+        zIndex = 1099;
+    }
+    $('input[maxlength], textarea').maxlength({
+        alwaysShow: true,
+        warningClass: "form-text text-muted mt-1",
+        limitReachedClass: "form-text text-danger mt-1",
+        showMaxLength: true,
+        showCharsTyped: true,
+        placement: 'bottom-right-inside',
+        zIndex: z_index
+    });
+}
+function successAlert() {
+    swal({
+        title: "Your purchase request has been received!",
+        text: "You will receive a confirmation email soon. If you have any questions, please email tesla@umn.edu.",
+        icon: "success",
+    }).then((result) => {
+        window.location.href = "https://www.teslaworks.net"
+    });
+}
+setMaxLengthBoostrap();
+</script>
+<footer>
+    <p class="text-center" style="color:black;">&copy; 2018 Tesla Works</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+        integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+        crossorigin="anonymous">
+</script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
+        integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
+        crossorigin="anonymous">
+</script>
+</body>
+</html>
