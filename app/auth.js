@@ -1,60 +1,80 @@
 var express = require('express');
-var router = express.Router();
-let jwt = require('jsonwebtoken');
+var router  = express.Router();
+let jwt     = require('jsonwebtoken');
+let fs      = require('fs');
+const path  = require('path');
+
 var middleware = require('./middleware.js');
+const con      = require('./database.js');
+
+const {OAuth2Client} = require('google-auth-library');
+const credentials    = require('./google_client_id.json');
 
 router.get('/', function(req, res) {
-  res.sendFile(__dirname + '/src/login.html');
+    res.sendFile(__dirname + '/src/login.html');
 });
 
-router.post('/', function(req, res) {
-  var userName = req.body.user;
-  //req.session.regenerate(function() {
-  //  req.session.user = userName;
-  //  res.send(req.session.user);
-  //});
-  req.session.user = userName;
-  res.send(req.session.user);
-  //session.save();
-  //console.log(req.session.user);
+// Given a user ID token, verify the token using Google's oauth stuff
+router.post('/token_sign_in', function(req, res) {
+    const token     = req.body.idtoken;
+    const CLIENT_ID = credentials.client_id;
+
+    const client = new OAuth2Client(CLIENT_ID);
+
+    async function verify() {
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
+            hd: 'umn.edu',        // only UMN accounts
+        });
+        const payload = ticket.getPayload();
+        const userid = payload['sub'];
+
+        req.session.user = await loginUser(payload);
+        res.send(req.session.user);
+    }
+
+    verify().catch(console.error);
 });
 
 router.post('/checkMe', function(req, res) {
-  res.send(req.session.user);
+    res.send(req.session.user);
 })
 
-router.post('/login', function(req, res) {
-  let username = req.body.username;
-  let password = req.body.password;
-  // For the purposes of this, the mocked username/password will be used temporarily
-  let mockedUsername = 'username';
-  let mockedPassword = 'password';
+// Logs in a user with Google UMN credientials
+// If a user has signed in before, simply lets them log in
+// If a user hasn't logged in before, adds them to the database and then logs them in
+// If a duplicate user exists, rejects the promise with an error message
+function loginUser(info) {
+    return new Promise((resolve, reject) => {
+        const email       = info.email;
+        const firstName   = info.given_name;
+        const lastName    = info.family_name;
+        const googleId    = info.sub;
 
-  if (username && password) {
-    if (username === mockedUsername && password === mockedPassword) {
-      let token = jwt.sign({username: username},
-        config.secret,
-        { expiresIn: '24h' // expires in 24 hours
-        }
-      );
-      // return the JWT token for the future API calls
-      res.json({
-        success: true,
-        message: 'Authentication successful',
-        token: token
-      });
-    } else {
-      res.send(403).json({
-        success: false,
-        message: 'Incorrect username or password'
-      });
-    }
-  } else {
-    res.send(400).json({
-      success: false,
-      message: 'Authentication failed! Please check the request'
+        con.query('SELECT * FROM user WHERE googleId = ?', [googleId], function (err, result) {
+            if (err) {
+                throw err;
+            }
+
+            if (result.length == 0) { // new user
+                const addQuery = 'INSERT INTO user (email, firstname, lastname, googleId) VALUES (?, ?, ?, ?)';
+                con.query(addQuery, [email, firstName, lastName, googleId], function (err, result) {
+                    if (err) {
+                        throw err;
+                    }
+
+                    // successful insert of new user
+                    resolve(email);
+                });
+            } else if (result.length == 1) { // returning user
+                resolve(email);
+            } else { // duplicate user - shouldn't ever happen
+                console.log('ERROR: Duplicate user found in database');
+                reject('ERROR: Duplicate user found in database');
+            }
+        });
     });
-  }
-});
+}
 
 module.exports = router;
