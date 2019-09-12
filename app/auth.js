@@ -37,6 +37,10 @@ router.post('/token_sign_in', function(req, res) {
     verify().catch(console.error);
 });
 
+router.get('/role', function(req, res) {
+  res.send(req.session.userRole);
+})
+
 router.post('/checkMe', function(req, res) {
     res.send(req.session.user);
 })

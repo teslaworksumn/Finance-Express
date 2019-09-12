@@ -11,6 +11,8 @@ var mainpage = require('./mainpage.js');
 var ledger = require('./ledger.js');
 var graphs = require('./graphs.js');
 var auth = require('./auth.js');
+var info = require('./info.js');
+var pr = require('./pr.js');
 
 
 // Starting point of the server
@@ -24,11 +26,14 @@ function main () {
   // Routes & Handlers
   app.use(express.static(__dirname + '/src'))
   //app.use(session({secret: "tesla_works_is_amazing", saveUninitialized: false, resave: false}));
-  app.use(session({secret: "tesla_works_is_amazing", saveUninitialized: false, cookie: { maxAge: 60000 }, resave: false}));
+  app.use(session({secret: "tesla_works_is_amazing", saveUninitialized: false, cookie: { maxAge: 1800000, secure: true }, resave: false}));
   app.use('/', mainpage);
+  app.use('/home', mainpage);
   app.use('/auth', auth);
   app.use('/ledger', ledger);
   app.use('/graphs', graphs);
+  app.use('/info', info);
+  app.use('/purchaserequest', pr);
   https.createServer({
     key: fs.readFileSync('server.key'),
     cert: fs.readFileSync('server.cert')
