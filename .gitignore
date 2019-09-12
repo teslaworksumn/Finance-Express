@@ -64,3 +64,6 @@ typings/
 *.key
 *.cert
 
+# credentials
+database.js
+google_client_id.json

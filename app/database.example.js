@@ -1,14 +1,14 @@
 var mysql = require('mysql');
 
 var connection = mysql.createConnection({
-  host : 'localhost',
-  user : 'teslaFinance',
-  password : 'teslaFinancePass',
-  database : 'financeTest'
+    host:     'localhost',
+    user:     'username',
+    password: 'password',
+    database: 'database'
 });
 
 connection.connect(function(err) {
-  if (err) throw err;
+    if (err) throw err;
 });
 
 module.exports = connection;

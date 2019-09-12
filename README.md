@@ -28,6 +28,8 @@ access to a test database to use for development.
 
 ## Files
 
+### Database
+
 A `database.example.js` file has been provided for you to modify with your own
 credentials.  You should change the name of this file to `database.js` to
 prevent it from being source controlled with the command:
@@ -40,14 +42,14 @@ The `database.example.js` file looks like:
 var mysql = require('mysql');
 
 var connection = mysql.createConnection({
-  host : 'localhost',
-  user : 'teslaFinance',
-  password : 'teslaFinancePass',
-  database : 'financeTest'
+    host:     'localhost',
+    user:     'username',
+    password: 'password',
+    database: 'database'
 });
 
 connection.connect(function(err) {
-  if (err) throw err;
+    if (err) throw err;
 });
 
 module.exports = connection;
@@ -55,6 +57,26 @@ module.exports = connection;
 
 This file will be used to authenticate to the MySQL server and make queries to
 the database.
+
+### Google Authentication
+
+A `google_client_id.example.json` file has been provided for you to modify with your own
+credentials.  You should change the name of this file to `google_client_id.json` to
+prevent it from being source controlled with the command:
+```
+mv google_client_id.example.json google_client_id.json
+```
+
+The `google_client_id.example.json` file looks like:
+```
+{
+    "client_id": "XXX-XXX.apps.googleusercontent.com"
+}
+```
+
+This file holds the app's Google app client ID and authenticate a user
+ID token with Google. Contact this repo's admins or email `tesla@umn.edu` to
+get this key.
 
 ## Running
 
