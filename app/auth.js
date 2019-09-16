@@ -31,6 +31,7 @@ router.post('/token_sign_in', function(req, res) {
         const userid = payload['sub'];
 
         req.session.user = await loginUser(payload);
+        req.session.userRole = await checkRole(req.session.user);
         res.send(req.session.user);
     }
 
@@ -51,10 +52,10 @@ router.post('/checkMe', function(req, res) {
 // If a duplicate user exists, rejects the promise with an error message
 function loginUser(info) {
     return new Promise((resolve, reject) => {
-        const email       = info.email;
-        const firstName   = info.given_name;
-        const lastName    = info.family_name;
-        const googleId    = info.sub;
+        const email     = info.email;
+        const firstName = info.given_name;
+        const lastName  = info.family_name;
+        const googleId  = info.sub;
 
         con.query('SELECT * FROM user WHERE googleId = ?', [googleId], function (err, result) {
             if (err) {
@@ -75,6 +76,29 @@ function loginUser(info) {
                 resolve(email);
             } else { // duplicate user - shouldn't ever happen
                 console.log('ERROR: Duplicate user found in database');
+                reject('ERROR: Duplicate user found in database');
+            }
+        });
+    });
+}
+
+// Given the email of a logged in user, returns the string of the user's role
+function checkRole(email) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT role.name FROM role INNER JOIN user ON role.roleid=user.roleid WHERE user.email= ?';
+
+        con.query(query, [email], function (err, result) {
+            if (err) {
+                throw err;
+            }
+
+            if (result.length == 0) {
+                console.error('Email ' + email + ' not found in database');
+                reject('ERROR: Email ' + email + ' not found in database');
+            } else if (result.length == 1) {
+                resolve(result[0].name);
+            } else { // duplicate user - shouldn't ever happen
+                console.error('Duplicate user found in database');
                 reject('ERROR: Duplicate user found in database');
             }
         });
